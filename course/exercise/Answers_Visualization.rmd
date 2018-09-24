@@ -1,0 +1,91 @@
+---
+title: "Visualization"
+author: "MRC LMS Bioinformatics Core"
+date: "27 September 2018"
+output: html_document
+Website: https://github.com/LMSBioinformatics
+---
+
+1. Transform the count data using rlog and vst method.
+
+```{r,collapse=T,warning=FALSE,echo=FALSE,eval=TRUE,message=FALSE}
+# please change it to your exercise directory
+setwd("/Volumes/bioinfomatics$/yfwang/CBW/RNAseq_CBW2018/course/exercise")
+
+suppressPackageStartupMessages(library(DESeq2))
+
+targetsE <- read.table("Exercise_ShortRNAseq_sample.info",sep="\t",header=TRUE)
+
+AllCountsE<-read.csv(file="Exercise_ShortRNAseq_counts.csv",header=T,row.names=1)
+
+cDataE<-data.frame(name=targetsE$sample,condition=targetsE$condition,batch=targetsE$batch)
+
+ddsE<-DESeqDataSetFromMatrix(countData= AllCountsE,colData=cDataE,design=~condition)
+ddsE<-DESeq(ddsE)
+
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+rldE<-rlog(ddsE)  
+
+vsdE <- varianceStabilizingTransformation(ddsE)
+
+```
+
+2. a) Perform the Principal Component Analysis using rlog method and find out % significance values of first two principal components .
+
+```{r, echo=T,eval=TRUE}
+ 
+suppressPackageStartupMessages(library(DESeq2))
+
+
+plotPCA(rldE, intgroup="condition")
+dataE <- plotPCA(rldE, intgroup=c("condition"), returnData=TRUE)
+
+```
+
+ b) Repeat the PCA, this time using VST method and compare the plots with the ones obtained using rlog method.
+ 
+```{r, echo=T,eval=TRUE}
+ 
+
+plotPCA(vsdE, intgroup="condition")
+
+```
+ 
+3. Perform clustering based on sample to sample distances and compare it with the clusters obtained using PCA.
+
+```{r,eval=TRUE,echo=TRUE}   
+
+suppressPackageStartupMessages(library(gplots))
+
+rlogcountE <- assay(rldE)    
+sampleDistsE <- as.matrix(dist(t(rlogcountE)))
+suppressPackageStartupMessages(library(RColorBrewer))
+
+showcols <- brewer.pal(8, "Set1")[1:length(unique(colData(ddsE)$condition))]
+
+heatmap.2(as.matrix(sampleDistsE), key=F, trace="none",
+    col=colorpanel(100, "black", "white"),
+    ColSideColors=showcols[colData(ddsE)$condition], 
+    RowSideColors=showcols[colData(ddsE)$condition],
+    margin=c(10, 10), main="Sample Distance Matrix")
+         
+```
+
+4. Draw a heatmap of count matrix based on top 40 highly expressed genes using rlog and vst data.
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+suppressPackageStartupMessages(library("pheatmap"))
+select <- order(rowMeans(counts(ddsE,normalized=TRUE)),decreasing=TRUE)[1:40]
+
+
+pheatmap(assay(rldE)[select,])
+
+pheatmap(assay(vsdE)[select,])
+
+```

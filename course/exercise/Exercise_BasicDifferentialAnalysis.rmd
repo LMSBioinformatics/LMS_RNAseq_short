@@ -1,0 +1,47 @@
+---
+title: "Basic Differential Analysis"
+author: "MRC LMS Bioinformatics Core"
+date: "27 September 2018"
+output: html_document
+Website: http://bioinformatics.lms.mrc.ac.uk/LMStraining.html
+---
+
+In this exercise, we will read in a count data from erythroblast differentiation experiment in mice. 
+This data was downloaded from GEO database (http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE49843) and aligned to mm9 genome assembly using  Rsubread R package. More details with regards to this experiment please refer to (http://www.ncbi.nlm.nih.gov/pubmed/24092935). 
+
+(Note: Gene identifiers are entrez gene ids)
+
+**Material**
+
+Please go to the folder "/course/exercise/"
+
+  * Sample description: Exercise_ShortRNAseq_sample.info
+  
+  * Count data: Exercise_ShortRNAseq_counts.csv
+
+
+1. Read in sample information and count data.
+   Identify how many factors are involved in this this experiment.
+
+
+2. Construct DESeqDataSet object using sample information and counts data.
+
+
+ 3. a) Find the number of genes that are changed in knockdown samples versus control, i.e. KOa vs FFa and KOb vs FFa, at FDR 0.05 irrespective of fold change.
+
+  b) Find the number of genes that are changed in the above situation with fold change threshold, i.e. fold change ratio > 2.
+ 
+ 4. Using Biomart, add extra columns to the results dataframe such as gene name, gene biotype, gene description etc. 
+ 
+ 5. Draw MA plot and highlight all significant genes with adjusted p value less than 0.05.  
+
+ 6. (a) Use function plotCounts() to plot the counts for gene 497097 (entrez gene id). 
+  
+    (b) Plot the unnormalized counts for the same gene.
+ 
+
+
+
+
+
+

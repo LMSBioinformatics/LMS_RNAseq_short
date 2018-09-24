@@ -1,0 +1,17 @@
+---
+title: "Functional Analysis"
+author: "MRC LMS Bioinformatics Core"
+date: "27 September 2018"
+output: html_document
+Website: http://bioinformatics.lms.mrc.ac.uk/LMStraining.html
+---
+
+
+1.  Using the differentially expressed genes in KOa vs FFa (FDR 0.05 and and fold change ratio > 2) from the differentially expressed gene analysis, perform the Gene Ontology (for biological process and molecular function) and KEGG Pathway Enrichment Analysis.
+
+
+2. Annotate the goseq results further by change the Kegg pathway id to name.
+
+
+
+

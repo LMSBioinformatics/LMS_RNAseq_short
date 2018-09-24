@@ -1,0 +1,90 @@
+---
+title: "Functional Analysis"
+author: "MRC LMS Bioinformatics Core"
+date: "27 September 2018"
+output: html_document
+Website: http://bioinformatics.csc.mrc.ac.uk/training.html
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+1. Using the differentially expressed genes in KOa vs FFa (FDR 0.05 and and fold change ratio > 2) from the differentially expressed gene analysis, perform the Gene Ontology (for biological process and molecular function) and KEGG Pathway Enrichment Analysis.
+
+```{r,collapse=T,warning=FALSE,echo=TRUE,eval=TRUE,message=FALSE}
+# please change it to your exercise directory
+setwd("/Volumes/bioinfomatics$/yfwang/CBW/RNAseq_CBW2018/course/exercise")
+
+suppressPackageStartupMessages(library(DESeq2))
+
+targetsE <- read.table("Exercise_ShortRNAseq_sample.info",sep="\t",header=TRUE)
+
+AllCountsE<-read.csv(file="Exercise_ShortRNAseq_counts.csv",header=T,row.names=1)
+
+cDataE<-data.frame(name=targetsE$sample,condition=targetsE$condition,batch=targetsE$batch)
+
+ddsE<-DESeqDataSetFromMatrix(countData= AllCountsE,colData=cDataE,design=~condition)
+ddsE<-DESeq(ddsE)
+
+
+
+```
+
+```{r, echo=T,eval=TRUE,message=FALSE}
+
+suppressPackageStartupMessages(library(KEGG.db))
+suppressPackageStartupMessages(library(goseq))
+
+# remove the NAs
+# shows how many genes were differentially expressed in KOa vs FFa, with FDR<0.05 and fold change ratio > 2
+res1<-results(ddsE, contrast=c("condition","KOa","FFa"))
+resdat<- res1[complete.cases(res1$padj),]
+
+degenes<-as.integer(resdat$padj<0.05 & abs(resdat$log2FoldChange)>1)
+names(degenes)<-rownames(resdat)
+    
+# remove duplicate gene names
+degenes<-degenes[match(unique(names(degenes)),names(degenes))]
+table(degenes)
+
+# Fitting the probability weighting function (PWF)
+# note, we use Entrez Gene ID as identifiler for this exercise
+# we need to choose the correct "id" for the nullp function
+# more details see
+?nullp
+
+pwf=nullp(degenes,'mm9','knownGene', plot.fit=FALSE)
+
+# Calculate  the  over  and  under  expressed  GO categories among DE genes
+go<-goseq(pwf,'mm9','knownGene', test.cats=c("GO:BP","GO:MF","KEGG"))
+
+```
+
+2. Change the KEGG pathway id to name in the goseq output
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+
+# function that converts KEGG id to KEGG description
+xx <- as.list(KEGGPATHID2NAME)
+temp <- cbind(names(xx),unlist(xx))
+    
+addKeggTogoseq <- function(JX,temp){
+  for(l in 1:nrow(JX)){
+      if(JX[l,1] %in% temp[,1]){
+          JX[l,"term"] <- temp[temp[,1] %in% JX[l,1],2]
+          JX[l,"ontology"] <- "KEGG"
+      }
+  }
+  return(JX)
+}
+
+restemp<-addKeggTogoseq(go,temp)   
+
+head(restemp)
+
+# save the goseq result
+write.csv(restemp,file="Exercise_ShortRNAseq_GO_Kegg_Wallenius.csv", row.names=F)
+```
+
+

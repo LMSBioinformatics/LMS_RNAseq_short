@@ -1,0 +1,26 @@
+---
+title: "Visualization"
+author: "MRC LMS Bioinformatics Core"
+date: "27 September 2018"
+output: html_document
+Website: https://github.com/LMSBioinformatics
+---
+
+Building on from last exercise, we will now use visualization tools to asess data quality.
+
+
+1. Transform the count data using rlog and vst method.
+
+
+2. a) Perform the Principal Component Analysis using rlog method and find out % significance values of first two principal components .
+
+
+  b) Repeat the PCA, this time using VST method and compare the plots with the ones obtained using rlog method.
+ 
+3. Perform clustering based on sample to sample distances and compare it with the clusters obtained using PCA.
+
+
+4. Draw a heatmap of count matrix based on top 40 differentially expressed genes using rlog and vst data.
+
+
+

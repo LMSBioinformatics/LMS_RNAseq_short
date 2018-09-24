@@ -1,0 +1,135 @@
+---
+title: "Basic Differential Analysis"
+author: "MRC LMS Bioinformatics Core"
+date: "27 September 2018"
+output: html_document
+Website: http://bioinformatics.lms.mrc.ac.uk/LMStraining.html
+editor_options: 
+  chunk_output_type: console
+---
+
+In this exercise, we will read in a count data from erythroblast differentiation experiment in mice. This data was downloaded from GEO database (http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE49843) and aligned to mm9 genome assembly using  Rsubread R package. More details with regards to this experiment please refer to (http://www.ncbi.nlm.nih.gov/pubmed/24092935). 
+
+(Note: Gene identifiers are entrez gene ids)
+
+**Material**
+
+Please go to the folder "/course/exercise/"
+
+* Sample description: Exercise_ShortRNAseq_sample.info
+
+* Count data: Exercise_ShortRNAseq_counts.csv
+
+
+
+1. Read in the sample information and count data.
+   Identify how many factors this experiment involves.
+
+```{r,collapse=T,warning=FALSE,eval=TRUE}
+# please change it to your exercise directory
+setwd("/Volumes/bioinfomatics$/yfwang/CBW/RNAseq_CBW2018/course/exercise")
+
+suppressPackageStartupMessages(library(DESeq2))
+
+# load the sample description that we generated manually for this exercise
+
+targetsE <- read.table("Exercise_ShortRNAseq_sample.info",sep="\t",header=TRUE)
+
+# check the content of "targets" object that we just created
+
+targetsE
+
+# load the count information.
+
+AllCountsE<-read.csv(file="Exercise_ShortRNAseq_counts.csv",header=T,row.names=1)
+
+# see the what is in the counts.csv
+
+head(AllCountsE)
+
+```
+
+In this experiment, we have two factors, namely, condition and batch. (ps: we introduced the 'mock' batch factor for this exercise. In the original publication, the batch effect was not discussed).
+
+For the condition factor, we have 3 levels, namely FFa, KOa and KOb.
+
+For the batch factor, we have 3 levels, namely a, b and c.
+
+2. Construct DESeqDataSet object using sample information and counts data.
+
+```{r,collapse=T,warning=FALSE,eval=TRUE}
+
+# We provide entrez_id as identifier for this exercise
+
+cDataE<-data.frame(name=targetsE$sample,condition=targetsE$condition,batch=targetsE$batch)
+
+ddsE<-DESeqDataSetFromMatrix(countData= AllCountsE,colData=cDataE,design=~condition)
+
+```
+
+3. a) Find the number of genes that are changed in knockdown samples versus control, i.e. KOa vs FFa and KOb vs FFa, at FDR 0.05 irrespective of fold change.
+
+ b) Find the number of genes that are changed in the above situation with fold change threshold, i.e. fold change ratio > 2.
+
+
+```{r, echo=T,warnings=F,collapse=T,eval=TRUE}
+
+ddsE<-DESeq(ddsE)
+
+# shows how many genes were differentially expressed in KOa vs FFa, with FDR<0.05
+res1<-results(ddsE, contrast=c("condition","KOa","FFa"))
+summary(res1,alpha=0.05)
+
+# shows how many genes were differentially expressed in KOa vs FFa, with FDR<0.05 and fold change ratio > 2
+DE_res1<- res1[complete.cases(res1$padj),]
+DE_res1<- DE_res1[DE_res1$padj<0.05 & abs(DE_res1$log2FoldChange)>1,]
+
+# shows how many genes were differentially expressed in KOb vs FFa, with FDR<0.05
+res2<-results(ddsE, contrast=c("condition","KOb","FFa"))
+
+# shows how many genes were differentially expressed in KOa vs FFa, with FDR<0.05 and fold change ratio > 2
+DE_res2<- res2[complete.cases(res2$padj),]
+DE_res2<- DE_res2[DE_res2$padj<0.05 & abs(DE_res2$log2FoldChange)>1,]
+
+
+```
+
+4. Using Biomart, add extra columns to the results dataframe such as gene name, gene biotype, gene description etc. 
+
+```{r, echo=T,warnings=F,collapse=T,eval=TRUE}
+
+# Add Gene Symbols
+
+library(biomaRt)
+
+mart=useMart('ENSEMBL_MART_ENSEMBL',
+dataset='mmusculus_gene_ensembl',
+host="may2012.archive.ensembl.org")
+
+bm<-getBM(attributes=c('ensembl_gene_id',"gene_biotype" ,"description" ,'mgi_symbol'),filters ='entrezgene',values=rownames(res1), mart=mart)
+
+resAnnotated <- merge(as.data.frame(res1),bm,by.x=0,by.y=1)
+
+
+
+```
+
+5. Draw MA plot and highlight all significant genes with adjusted p value less than 0.05.  
+
+```{r,eval=TRUE,echo=TRUE}
+
+plotMA(res1, main="DESeq2", ylim=c(-4,4))
+
+```
+
+ 6. a) Use function plotCounts() to plot the counts for gene 497097. (b) Plot the unnormalized counts.
+ 
+```{r,eval=TRUE,echo=TRUE}
+plotCounts(ddsE,gene="497097",intgroup="condition")
+
+plotCounts(ddsE,gene="497097",intgroup="condition",normalized = FALSE)
+
+```
+
+
+
