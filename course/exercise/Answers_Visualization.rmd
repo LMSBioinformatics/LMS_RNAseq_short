@@ -1,7 +1,7 @@
 ---
 title: "Visualization"
 author: "MRC LMS Bioinformatics Core"
-date: "27 September 2018"
+date: "20 September 2019"
 output: html_document
 Website: https://github.com/LMSBioinformatics
 ---
@@ -10,7 +10,7 @@ Website: https://github.com/LMSBioinformatics
 
 ```{r,collapse=T,warning=FALSE,echo=FALSE,eval=TRUE,message=FALSE}
 # please change it to your exercise directory
-setwd("/Volumes/bioinfomatics$/yfwang/CBW/RNAseq_CBW2018/course/exercise")
+setwd("/Volumes/bioinfomatics$/yfwang/CBW/RNAseq_CBW2019/course/exercise")
 
 suppressPackageStartupMessages(library(DESeq2))
 
@@ -59,20 +59,21 @@ plotPCA(vsdE, intgroup="condition")
 
 ```{r,eval=TRUE,echo=TRUE}   
 
-suppressPackageStartupMessages(library(gplots))
+suppressPackageStartupMessages(library("RColorBrewer"))
+suppressPackageStartupMessages(library("pheatmap"))
 
 rlogcountE <- assay(rldE)    
-sampleDistsE <- as.matrix(dist(t(rlogcountE)))
-suppressPackageStartupMessages(library(RColorBrewer))
+sampleDistMatrixE <- as.matrix(dist(t(rlogcountE)))
 
-showcols <- brewer.pal(8, "Set1")[1:length(unique(colData(ddsE)$condition))]
 
-heatmap.2(as.matrix(sampleDistsE), key=F, trace="none",
-    col=colorpanel(100, "black", "white"),
-    ColSideColors=showcols[colData(ddsE)$condition], 
-    RowSideColors=showcols[colData(ddsE)$condition],
-    margin=c(10, 10), main="Sample Distance Matrix")
-         
+rownames(sampleDistMatrixE) <- rldE$condition
+colnames(sampleDistMatrixE) <- NULL
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+pheatmap(sampleDistMatrixE,
+         clustering_distance_rows=dist(t(rlogcountE)),
+         clustering_distance_cols=dist(t(rlogcountE)),
+         col=colors)
+
 ```
 
 4. Draw a heatmap of count matrix based on top 40 highly expressed genes using rlog and vst data.

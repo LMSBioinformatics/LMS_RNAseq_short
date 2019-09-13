@@ -1,7 +1,7 @@
 ---
 title: "Basic Differential Analysis"
 author: "MRC LMS Bioinformatics Core"
-date: "27 September 2018"
+date: "20 September 2019"
 output: html_document
 Website: http://bioinformatics.lms.mrc.ac.uk/LMStraining.html
 ---
@@ -13,7 +13,7 @@ This data was downloaded from GEO database (http://www.ncbi.nlm.nih.gov/geo/quer
 
 **Material**
 
-Please go to the folder "/course/exercise/"
+Please go to the folder "./course/exercise/"
 
   * Sample description: Exercise_ShortRNAseq_sample.info
   
@@ -27,15 +27,15 @@ Please go to the folder "/course/exercise/"
 2. Construct DESeqDataSet object using sample information and counts data.
 
 
- 3. a) Find the number of genes that are changed in knockdown samples versus control, i.e. KOa vs FFa and KOb vs FFa, at FDR 0.05 irrespective of fold change.
+3. (a) Find the number of genes that are changed in knockdown samples versus control, i.e. KOa vs FFa and KOb vs FFa, at FDR 0.05 irrespective of fold change.
 
-  b) Find the number of genes that are changed in the above situation with fold change threshold, i.e. fold change ratio > 2.
+   (b) Find the number of genes that are changed in the above situation with fold change threshold, i.e. fold change ratio > 2.
  
- 4. Using Biomart, add extra columns to the results dataframe such as gene name, gene biotype, gene description etc. 
+4. Using Biomart, add extra columns to the results dataframe such as gene name, gene biotype, gene description etc. 
  
- 5. Draw MA plot and highlight all significant genes with adjusted p value less than 0.05.  
+5. Draw MA plot and highlight all significant genes with adjusted p value less than 0.05.  
 
- 6. (a) Use function plotCounts() to plot the counts for gene 497097 (entrez gene id). 
+6.  (a) Use function plotCounts() to plot the counts for gene 497097 (entrez gene id). 
   
     (b) Plot the unnormalized counts for the same gene.
  

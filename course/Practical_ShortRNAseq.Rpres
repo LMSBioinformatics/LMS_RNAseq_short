@@ -6,25 +6,13 @@ opts_chunk$set(cache=TRUE)
 Analysis of RNAseq data
 ========================================================
 author:MRC LMS Bioinformatics Core
-date: 27 September 2018
+date: 20 September 2019
 width: 1440
 height: 1100
 autosize: true
 font-import: <link href='http://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
 font-family: 'Slabo 27px', serif;
 css:style.css
-
-
-RNA-seq Introduction 
-========================================================
-
-RNA Sequencing (**RNA-seq**) is a well established technique which allows for studying expression profiles of thousands of genes/transcripts simultaneously. 
-
-<div align="center">
-<img src="figures/nrg2484-f1.jpg" alt="gene" height="700" width="600">
-</div>
-
-* Nature Reviews Genetics 10, 57-63 (January 2009)
 
 
 RNA-seq analysis pipeline
@@ -38,8 +26,8 @@ RNA-seq analysis pipeline
 Contents
 ====================================
 * [Quality Assessment](#/quality).
-* [Read alignment](#/alignment).
-* [Read feature counting](#/counting).
+* Read alignment (covered by the theory).
+* Read feature counting (covered by the theory).
 * [Differential gene expression analysis](#/de).
 * [Exploring and saving results](#/explore).
 * [Functional analysis - Gene Ontology](#/go).
@@ -61,31 +49,6 @@ Quality Assessment - FastQC (2/2)
 <div align="center">
 <img src="figures/fastqc_2.png" alt="pipe" height="700" width="1100">
 </div>
-
-
-Read alignment - gapped aligner (1/2)
-====================================
-id: alignment
-
-First step in RNA-Seq data analysis is to align the raw reads to genome/transcriptome. 
-
-For RNASeq data alignment, aligner need to be able to align across the exon-exon junction.
-
-<div align="center">
-<img src="figures/aligner.png" alt="pipe" height="450" width="1100">
-</div>
-
-* Garber et al., 2011. Nat Methods. 8(6):469-77. Table 1
-
-
-Read alignment - gapped aligner (2/2)
-====================================
-
-<div align="center">
-<img src="figures/aligner2.png" alt="pipe" height="600" width="1100">
-</div>
-
-* Garber et al., 2011. Nat Methods. 8(6):469-77. Figure 1
 
 
 Check before you carry on ...
@@ -187,7 +150,13 @@ You may navigate to the unarchived LMS_RNAseq_short/course folder in the Rstudio
 
 **Session -> Set Working Directory -> Choose Directory**
 
-or in the console, 
+<div align="center">
+<img src="figures/R_set_path.png" alt="path" height="700" width="1200">
+</div>
+
+
+Set working directory - in the console
+========================================================
 
 Use the getwd() to see where your current directory is
 
@@ -201,7 +170,7 @@ Use setwd() to set up your directory in the console
 
 ```{r,eval=F} 
 
-setwd("/PathToMyDownload/LMS_RNAseq_short/course")
+setwd("/Users/skhadaya/RNAseq_CBW2019/course")
 
 
 ```
@@ -285,7 +254,9 @@ Prepare deseqdataset object
 ```{r,eval=TRUE,echo=TRUE}  
 
                               
-cData<-data.frame(name=targets$Sample,                                                                          Group=targets$Group,Batch=targets$Batch)
+cData<-data.frame(name=targets$Sample,
+                  Group=targets$Group,
+                  Batch=targets$Batch)
 
 rownames(cData)<-cData[,1]
 
@@ -453,16 +424,15 @@ Add Gene symbol
 ```{r,eval=TRUE,echo=TRUE}   
 
 # Add Gene Symbols
-
 library(biomaRt)
 
-mart=useMart('ENSEMBL_MART_ENSEMBL',
-dataset='mmusculus_gene_ensembl',
-host="may2012.archive.ensembl.org")
+# retrieve the mm9 information from biomart
+mart=useMart('ENSEMBL_MART_ENSEMBL',dataset='mmusculus_gene_ensembl',
+             host="may2012.archive.ensembl.org")
 
 bm<-getBM(attributes=c('ensembl_gene_id','mgi_symbol'),
-filters ='ensembl_gene_id',
-values=rownames(resOrdered), mart=mart)
+          filters ='ensembl_gene_id',
+          values=rownames(resOrdered), mart=mart)
 
 # see the first few rows of "bm" object
 head(bm)      
@@ -655,7 +625,7 @@ We will use following visualization tools to assess the data quality.
 * Principal component analysis plot
 
 
-Heatmap of the count matrix
+Heatmap of the count matrix (rld)
 ========================================================
 
 To explore a counts matrix, it is often useful to look it as heatmap.
@@ -667,7 +637,6 @@ To explore a counts matrix, it is often useful to look it as heatmap.
 library("pheatmap")
 select <-order(rowMeans(counts(dds,normalized=TRUE)),decreasing=TRUE)[1:20]
 
-
 pheatmap(assay(rld)[select,])
 
 
@@ -675,7 +644,7 @@ pheatmap(assay(rld)[select,])
 
 
 
-Heatmap of the count matrix
+Heatmap of the count matrix (vsd)
 ========================================================
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -696,10 +665,9 @@ The assay function is used to extract the matrix of normalized values.
 
 ```{r,eval=TRUE,echo=TRUE}   
 
+sampleDists <- dist(t(assay(rld)))
 
-rlogcount <- assay(rld)    
-sampleDists <- as.matrix(dist(t(rlogcount)))
-         
+
 ```
 
 ========================================================
@@ -707,16 +675,19 @@ sampleDists <- as.matrix(dist(t(rlogcount)))
  Save the plot as png file
 
 ```{r,eval=TRUE,echo=TRUE}
-library(RColorBrewer)
-showcols <- brewer.pal(8, "Set1")[1:length(unique(colData(dds)$Group))]
+library("RColorBrewer")
+sampleDistMatrix <- as.matrix(sampleDists)
 
 library(gplots)
 png(file="sample_dis_map.png")
-  heatmap.2(as.matrix(sampleDists), key=F, trace="none",
-    col=colorpanel(100, "black", "white"),
-    ColSideColors=showcols[colData(dds)$Group], 
-    RowSideColors=showcols[colData(dds)$Group],
-    margin=c(10, 10), main="Sample Distance Matrix")
+rownames(sampleDistMatrix) <- rld$Group
+colnames(sampleDistMatrix) <- NULL
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows=sampleDists,
+         clustering_distance_cols=sampleDists,
+         col=colors)
+
 dev.off()
 
 ```

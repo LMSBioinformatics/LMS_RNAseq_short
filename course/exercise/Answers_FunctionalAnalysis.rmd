@@ -1,7 +1,7 @@
 ---
 title: "Functional Analysis"
 author: "MRC LMS Bioinformatics Core"
-date: "27 September 2018"
+date: "20 September 2019"
 output: html_document
 Website: http://bioinformatics.csc.mrc.ac.uk/training.html
 editor_options: 
@@ -14,7 +14,7 @@ editor_options:
 
 ```{r,collapse=T,warning=FALSE,echo=TRUE,eval=TRUE,message=FALSE}
 # please change it to your exercise directory
-setwd("/Volumes/bioinfomatics$/yfwang/CBW/RNAseq_CBW2018/course/exercise")
+setwd("/Volumes/bioinfomatics$/yfwang/CBW/RNAseq_CBW2019/course/exercise")
 
 suppressPackageStartupMessages(library(DESeq2))
 

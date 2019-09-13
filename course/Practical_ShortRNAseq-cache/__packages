@@ -11,3 +11,7 @@ BiocParallel
 DelayedArray
 SummarizedExperiment
 DESeq2
+biomaRt
+pheatmap
+RColorBrewer
+gplots
