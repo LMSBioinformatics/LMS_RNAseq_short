@@ -65,6 +65,17 @@ To install these,</p>
 
 <ul>
 <li>First launch RStudio</li>
+
+<li>Install the packages in the R console if R version > 3.5.0
+<pre>
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c("DESeq2","goseq","RColorBrewer","ggplot2",
+"pheatmap","KEGG.db","org.Mm.eg.db","biomaRt"))
+</pre>
+</li>
+
 <li>Install the packages in the R console if R version <= 3.5.0
 <pre>
 source("<a href="https://bioconductor.org/biocLite.R">https://bioconductor.org/biocLite.R</a>")

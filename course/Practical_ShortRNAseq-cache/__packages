@@ -15,3 +15,10 @@ biomaRt
 pheatmap
 RColorBrewer
 gplots
+ggplot2
+AnnotationDbi
+KEGG.db
+BiasedUrn
+geneLenDataBase
+goseq
+org.Mm.eg.db

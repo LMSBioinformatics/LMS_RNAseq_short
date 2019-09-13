@@ -806,11 +806,12 @@ sampleDists <- dist(t(assay(rld)))
  Save the plot as png file
 
 
+
+
 ```r
-library("RColorBrewer")
 sampleDistMatrix <- as.matrix(sampleDists)
 
-library(gplots)
+library("RColorBrewer")
 png(file="sample_dis_map.png")
 rownames(sampleDistMatrix) <- rld$Group
 colnames(sampleDistMatrix) <- NULL
@@ -846,7 +847,7 @@ Principal component plot of the samples
 plotPCA(rld, intgroup="Group")
 ```
 
-![plot of chunk unnamed-chunk-31](Practical_ShortRNAseq-figure/unnamed-chunk-31-1.png)
+![plot of chunk unnamed-chunk-32](Practical_ShortRNAseq-figure/unnamed-chunk-32-1.png)
 
 ```r
 # save the plot
@@ -999,7 +1000,7 @@ ENSMUSG00000033793       0    1907.0 0.1312570
    plotPWF(pwf)
 ```
 
-![plot of chunk unnamed-chunk-36](Practical_ShortRNAseq-figure/unnamed-chunk-36-1.png)
+![plot of chunk unnamed-chunk-37](Practical_ShortRNAseq-figure/unnamed-chunk-37-1.png)
 
 ========================================================
 
@@ -1039,19 +1040,26 @@ head(go)
 
 ```
         category over_represented_pvalue under_represented_pvalue
-10138 GO:0044281            8.068650e-26                        1
-2663  GO:0006082            8.278639e-26                        1
-9891  GO:0043436            4.079637e-25                        1
-6089  GO:0019752            6.418361e-24                        1
-7717  GO:0032787            2.213142e-22                        1
-3021  GO:0006629            1.574901e-20                        1
-      numDEInCat numInCat                                  term ontology
-10138        327     1509      small molecule metabolic process       BP
-2663         214      832        organic acid metabolic process       BP
-9891         209      814             oxoacid metabolic process       BP
-6089         200      781     carboxylic acid metabolic process       BP
-7717         140      481 monocarboxylic acid metabolic process       BP
-3021         229     1001               lipid metabolic process       BP
+2454  GO:0005201            1.106093e-28                        1
+2657  GO:0006082            1.303400e-27                        1
+9909  GO:0043436            3.821805e-27                        1
+6089  GO:0019752            1.054196e-25                        1
+10158 GO:0044281            3.538608e-25                        1
+9368  GO:0042221            4.263561e-24                        1
+      numDEInCat numInCat                                        term
+2454          62      105 extracellular matrix structural constituent
+2657         218      829              organic acid metabolic process
+9909         213      808                   oxoacid metabolic process
+6089         204      778           carboxylic acid metabolic process
+10158        321     1483            small molecule metabolic process
+9368         513     2744                        response to chemical
+      ontology
+2454        MF
+2657        BP
+9909        BP
+6089        BP
+10158       BP
+9368        BP
 ```
 
 ========================================================
@@ -1064,19 +1072,26 @@ head(restemp)
 
 ```
         category over_represented_pvalue under_represented_pvalue
-10138 GO:0044281            8.068650e-26                        1
-2663  GO:0006082            8.278639e-26                        1
-9891  GO:0043436            4.079637e-25                        1
-6089  GO:0019752            6.418361e-24                        1
-7717  GO:0032787            2.213142e-22                        1
-3021  GO:0006629            1.574901e-20                        1
-      numDEInCat numInCat                                  term ontology
-10138        327     1509      small molecule metabolic process       BP
-2663         214      832        organic acid metabolic process       BP
-9891         209      814             oxoacid metabolic process       BP
-6089         200      781     carboxylic acid metabolic process       BP
-7717         140      481 monocarboxylic acid metabolic process       BP
-3021         229     1001               lipid metabolic process       BP
+2454  GO:0005201            1.106093e-28                        1
+2657  GO:0006082            1.303400e-27                        1
+9909  GO:0043436            3.821805e-27                        1
+6089  GO:0019752            1.054196e-25                        1
+10158 GO:0044281            3.538608e-25                        1
+9368  GO:0042221            4.263561e-24                        1
+      numDEInCat numInCat                                        term
+2454          62      105 extracellular matrix structural constituent
+2657         218      829              organic acid metabolic process
+9909         213      808                   oxoacid metabolic process
+6089         204      778           carboxylic acid metabolic process
+10158        321     1483            small molecule metabolic process
+9368         513     2744                        response to chemical
+      ontology
+2454        MF
+2657        BP
+9909        BP
+6089        BP
+10158       BP
+9368        BP
 ```
 
 
@@ -1108,14 +1123,19 @@ Session Information
 ```
 
 ```
-R version 3.5.1 (2018-07-02)
+R version 3.6.1 (2019-07-05)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 Running under: macOS High Sierra 10.13.6
 
 Matrix products: default
-BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
 
+Random number generation:
+ RNG:     Mersenne-Twister 
+ Normal:  Inversion 
+ Sample:  Rounding 
+ 
 locale:
 [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
 
@@ -1124,62 +1144,61 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] gplots_3.0.1                biomaRt_2.36.1             
- [3] org.Mm.eg.db_3.6.0          KEGG.db_3.2.3              
- [5] AnnotationDbi_1.42.1        pheatmap_1.0.10            
- [7] ggplot2_3.0.0               RColorBrewer_1.1-2         
- [9] goseq_1.32.0                geneLenDataBase_1.16.0     
-[11] BiasedUrn_1.07              DESeq2_1.20.0              
-[13] SummarizedExperiment_1.10.1 DelayedArray_0.6.5         
-[15] BiocParallel_1.14.2         matrixStats_0.54.0         
-[17] Biobase_2.40.0              GenomicRanges_1.32.6       
-[19] GenomeInfoDb_1.16.0         IRanges_2.14.11            
-[21] S4Vectors_0.18.3            BiocGenerics_0.26.0        
-[23] edgeR_3.22.3                limma_3.36.3               
-[25] knitr_1.20                 
+ [1] org.Mm.eg.db_3.8.2          goseq_1.36.0               
+ [3] geneLenDataBase_1.20.0      BiasedUrn_1.07             
+ [5] KEGG.db_3.2.3               AnnotationDbi_1.46.1       
+ [7] ggplot2_3.2.1               gplots_3.0.1.1             
+ [9] RColorBrewer_1.1-2          pheatmap_1.0.12            
+[11] biomaRt_2.40.4              DESeq2_1.24.0              
+[13] SummarizedExperiment_1.14.1 DelayedArray_0.10.0        
+[15] BiocParallel_1.18.1         matrixStats_0.54.0         
+[17] Biobase_2.44.0              GenomicRanges_1.36.0       
+[19] GenomeInfoDb_1.20.0         IRanges_2.18.1             
+[21] S4Vectors_0.22.0            BiocGenerics_0.30.0        
+[23] knitr_1.24                 
 
 loaded via a namespace (and not attached):
- [1] nlme_3.1-137             bitops_1.0-6            
- [3] bit64_0.9-7              progress_1.2.0          
- [5] httr_1.3.1               tools_3.5.1             
- [7] backports_1.1.2          R6_2.2.2                
- [9] KernSmooth_2.23-15       rpart_4.1-13            
-[11] Hmisc_4.1-1              DBI_1.0.0               
-[13] lazyeval_0.2.1           mgcv_1.8-24             
-[15] colorspace_1.3-2         nnet_7.3-12             
-[17] withr_2.1.2              tidyselect_0.2.4        
+ [1] nlme_3.1-141             bitops_1.0-6            
+ [3] bit64_0.9-7              progress_1.2.2          
+ [5] httr_1.4.1               tools_3.6.1             
+ [7] backports_1.1.4          R6_2.4.0                
+ [9] rpart_4.1-15             KernSmooth_2.23-15      
+[11] mgcv_1.8-28              Hmisc_4.2-0             
+[13] DBI_1.0.0                lazyeval_0.2.2          
+[15] colorspace_1.4-1         nnet_7.3-12             
+[17] withr_2.1.2              tidyselect_0.2.5        
 [19] gridExtra_2.3            prettyunits_1.0.2       
-[21] bit_1.1-14               compiler_3.5.1          
-[23] htmlTable_1.12           rtracklayer_1.40.6      
-[25] caTools_1.17.1.1         scales_1.0.0            
-[27] checkmate_1.8.5          genefilter_1.62.0       
-[29] stringr_1.3.1            digest_0.6.16           
-[31] Rsamtools_1.32.3         foreign_0.8-71          
-[33] XVector_0.20.0           base64enc_0.1-3         
-[35] pkgconfig_2.0.2          htmltools_0.3.6         
-[37] highr_0.7                htmlwidgets_1.2         
-[39] rlang_0.2.2              rstudioapi_0.7          
-[41] RSQLite_2.1.1            bindr_0.1.1             
+[21] bit_1.1-14               compiler_3.6.1          
+[23] htmlTable_1.13.1         rtracklayer_1.44.2      
+[25] labeling_0.3             caTools_1.17.1.2        
+[27] scales_1.0.0             checkmate_1.9.4         
+[29] genefilter_1.66.0        Rsamtools_2.0.0         
+[31] stringr_1.4.0            digest_0.6.20           
+[33] foreign_0.8-72           XVector_0.24.0          
+[35] base64enc_0.1-3          pkgconfig_2.0.2         
+[37] htmltools_0.3.6          highr_0.8               
+[39] htmlwidgets_1.3          rlang_0.4.0             
+[41] rstudioapi_0.10          RSQLite_2.1.2           
 [43] gtools_3.8.1             acepack_1.4.1           
-[45] dplyr_0.7.6              RCurl_1.95-4.11         
-[47] magrittr_1.5             GO.db_3.6.0             
-[49] GenomeInfoDbData_1.1.0   Formula_1.2-3           
-[51] Matrix_1.2-14            Rcpp_0.12.18            
-[53] munsell_0.5.0            stringi_1.2.4           
-[55] zlibbioc_1.26.0          plyr_1.8.4              
-[57] grid_3.5.1               blob_1.1.1              
-[59] gdata_2.18.0             crayon_1.3.4            
-[61] lattice_0.20-35          Biostrings_2.48.0       
-[63] splines_3.5.1            GenomicFeatures_1.32.2  
-[65] annotate_1.58.0          hms_0.4.2               
-[67] locfit_1.5-9.1           pillar_1.3.0            
-[69] codetools_0.2-15         geneplotter_1.58.0      
-[71] XML_3.98-1.16            glue_1.3.0              
-[73] evaluate_0.11            latticeExtra_0.6-28     
-[75] data.table_1.11.4        gtable_0.2.0            
-[77] purrr_0.2.5              assertthat_0.2.0        
-[79] xtable_1.8-3             survival_2.42-6         
-[81] tibble_1.4.2             GenomicAlignments_1.16.0
-[83] memoise_1.1.0            bindrcpp_0.2.2          
-[85] cluster_2.0.7-1         
+[45] dplyr_0.8.3              RCurl_1.95-4.12         
+[47] magrittr_1.5             GO.db_3.8.2             
+[49] GenomeInfoDbData_1.2.1   Formula_1.2-3           
+[51] Matrix_1.2-17            Rcpp_1.0.2              
+[53] munsell_0.5.0            stringi_1.4.3           
+[55] zlibbioc_1.30.0          grid_3.6.1              
+[57] blob_1.2.0               gdata_2.18.0            
+[59] crayon_1.3.4             lattice_0.20-38         
+[61] Biostrings_2.52.0        splines_3.6.1           
+[63] GenomicFeatures_1.36.4   annotate_1.62.0         
+[65] hms_0.5.0                locfit_1.5-9.1          
+[67] zeallot_0.1.0            pillar_1.4.2            
+[69] geneplotter_1.62.0       codetools_0.2-16        
+[71] XML_3.98-1.20            glue_1.3.1              
+[73] evaluate_0.14            latticeExtra_0.6-28     
+[75] data.table_1.12.2        vctrs_0.2.0             
+[77] gtable_0.3.0             purrr_0.3.2             
+[79] assertthat_0.2.1         xfun_0.9                
+[81] xtable_1.8-4             survival_2.44-1.1       
+[83] tibble_2.1.3             GenomicAlignments_1.20.1
+[85] memoise_1.1.0            cluster_2.1.0           
 ```

@@ -674,11 +674,16 @@ sampleDists <- dist(t(assay(rld)))
 
  Save the plot as png file
 
-```{r,eval=TRUE,echo=TRUE}
-library("RColorBrewer")
-sampleDistMatrix <- as.matrix(sampleDists)
+```{r,eval=F,echo=F}
 
 library(gplots)
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+sampleDistMatrix <- as.matrix(sampleDists)
+
+library("RColorBrewer")
 png(file="sample_dis_map.png")
 rownames(sampleDistMatrix) <- rld$Group
 colnames(sampleDistMatrix) <- NULL
