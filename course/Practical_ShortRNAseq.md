@@ -956,7 +956,7 @@ degenes<-as.integer(resdat$padj<0.05)
 names(degenes)<-rownames(resdat)
     
 # remove duplicate gene names
-degenes<-degenes[match(unique(names(degenes)),                                                                                              names(degenes))]
+degenes<-degenes[match(unique(names(degenes)),names(degenes))]
 
 table(degenes)
 ```
